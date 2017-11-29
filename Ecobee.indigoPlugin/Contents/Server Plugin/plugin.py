@@ -337,27 +337,27 @@ class Plugin(indigo.PluginBase):
 	# Process action request from Indigo Server to change a cool/heat setpoint.
 	def _handleChangeSetpointAction(self, dev, newSetpoint, logActionName, stateKey):
 		oldNewSetpoint = newSetpoint
-		self.debugLog('newSetpoint is {}'.format(newSetpoint))
+		self.debugLog('newSetpoint is {0}'.format(newSetpoint))
 		#	the newSetpoint is in whatever units configured in the pluginPrefs
 		scale = self.pluginPrefs[TEMPERATURE_SCALE_PLUGIN_PREF]
-		self.debugLog('scale in use is {}'.format(scale))
+		self.debugLog('scale in use is {0}'.format(scale))
 		#	enforce minima/maxima based on the scale in use by the plugin
 		newSetpoint = self._constrainSetpoint(newSetpoint)
 		#	API uses F scale
 		newSetpoint = self._toFahrenheit(newSetpoint)
 		sendSuccess = False
 		#	Normalize units for consistent reporting
-		reportedNewSetpoint = '{}{}'.format(oldNewSetpoint,scale)
-		reportedHSP = '{}{}'.format(dev.heatSetpoint,scale)
-		reportedCSP = '{}{}'.format(dev.heatSetpoint,scale)
+		reportedNewSetpoint = '{0}{1}'.format(oldNewSetpoint,scale)
+		reportedHSP = '{0}{1}'.format(dev.heatSetpoint,scale)
+		reportedCSP = '{0}{1}'.format(dev.coolSetpoint,scale)
 
 		if stateKey == u"setpointCool":
-			indigo.server.log('set cool to: {} and leave heat at: {}'.format(reportedNewSetpoint,reportedHSP))
+			indigo.server.log('set cool to: {0} and leave heat at: {1}'.format(reportedNewSetpoint,reportedHSP))
 			if self.ecobee.set_hold_temp_id(dev.address, newSetpoint, dev.heatSetpoint):
 				sendSuccess = True
 
 		elif stateKey == u"setpointHeat":
-			indigo.server.log('set heat to: {} and leave cool at: {}'.format(reportedNewSetpoint,reportedCSP))
+			indigo.server.log('set heat to: {0} and leave cool at: {1}'.format(reportedNewSetpoint,reportedCSP))
  			if self.ecobee.set_hold_temp_id(dev.address, dev.coolSetpoint, newSetpoint):
 				sendSuccess = True		# Set to False if it failed.
 
